@@ -24,3 +24,10 @@
 # --- Operating System Files ---
 .DS_Store
 Thumbs.db
+
+
+# SOL / Linux specific
+core.*
+*.log
+*.out
+slurm-*.out
