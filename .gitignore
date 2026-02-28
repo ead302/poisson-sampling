@@ -1,0 +1,26 @@
+# --- R Specific Files ---
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data & Workspace
+.RData
+.RDataTmp
+.Ruserdata
+
+# RStudio Project files
+.Rproj.user/
+*.Rproj
+
+# --- Large Data Files (Crucial for NBER Natality) ---
+# This prevents accidentally uploading massive datasets
+*.csv
+*.rds
+*.Rdata
+*.gz
+*.zip
+*.txt
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db
