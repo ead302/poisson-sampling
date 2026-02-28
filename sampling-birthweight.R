@@ -15,11 +15,13 @@ t0 <- system.time({
     message(paste("...Starting 1st pass for Year:", yr))
 
     # Check if running on SOL (Linux) or Local (Windows)
-if (.Platform$OS.type == "unix") {
-  data_dir <- "/home/ead302/natality_data" 
-} else {
-  data_dir <- "C:/Users/User/Downloads"
-}
+    if (Sys.info()["sysname"] == "Linux") {
+      # Path on ASU SOL Server
+      data_dir <- "/home/eagyema3/Poisson_sampling"
+    } else {
+    # Path on your local Windows machine
+    data_dir <- "C:/Users/User/Downloads"
+    }
 
     #file_path<- paste0("C:/Users/User/Downloads/natality", yr, "us.csv")
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
@@ -68,12 +70,14 @@ if (.Platform$OS.type == "unix") {
   for (yr in years) {
     message(paste("... Starting 2nd pass for Year:", yr))
 
-        # Check if running on SOL (Linux) or Local (Windows)
-if (.Platform$OS.type == "unix") {
-  data_dir <- "/home/ead302/natality_data" 
-} else {
-  data_dir <- "C:/Users/User/Downloads"
-}
+    if (Sys.info()["sysname"] == "Linux") {
+      # Path on ASU SOL Server
+      data_dir <- "/home/eagyema3/Poisson_sampling"
+    } else {
+    # Path on your local Windows machine
+    data_dir <- "C:/Users/User/Downloads"
+    }
+    
     #file_path<- paste0("C:/Users/User/Downloads/natality", yr, "us.csv")
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
     con <- file(file_path, open = "r")
@@ -173,5 +177,6 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
 
