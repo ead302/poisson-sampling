@@ -3,7 +3,7 @@ library(ggplot2)
 setDTthreads(8)
 options(scipen = 999)
 
-years <- 2013:2024
+years <- 2023:2024
 chunk_size1<-50000
 sum_w <-0
 sum_wt<- 0
@@ -177,6 +177,7 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
 
 
