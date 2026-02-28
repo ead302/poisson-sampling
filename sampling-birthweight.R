@@ -150,12 +150,19 @@ if (.Platform$OS.type == "unix") {
 
 
 subsample <- do.call(rbind, subsample)
+
+# --- Save the Final Subsample ---
+# Saving as .rds preserves R-specific data types (like factors) and is compressed
+saveRDS(subsample, "natality_subsample_2013_2024.rds")
+
+# Optional: Also save as a small CSV if you want to open it in Excel/Python
+# fwrite(subsample, "natality_subsample_2013_2024.csv")
+
+message("Subsample saved successfully. You can now download the .rds file to your local machine.")
+
 print(t0["elapsed"])
-print(exp(mean(subsample$dbwt)))
-print(exp(sum_wt/sum_w))
 
-
-print(table(subsample$dob_yy))
+#print(table(subsample$dob_yy))
 
 print(
 ggplot(subsample, aes(x = exp(dbwt))) +
@@ -166,4 +173,5 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
