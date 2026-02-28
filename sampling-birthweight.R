@@ -1,6 +1,6 @@
 library(data.table)
 library(ggplot2)
-setDTthreads(0)
+setDTthreads(8)
 options(scipen = 999)
 
 years <- 2013:2024
@@ -177,6 +177,7 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
 
 
