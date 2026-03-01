@@ -24,6 +24,8 @@ To replicate this analysis:
 1. Clone the repository to your local machine, run:
 ```
 git clone https://github.com/ead302/poisson-sampling.git
+```
+```
 cd poisson-sampling
 ```
 2. Quick Test: This repo includes a `toy_data/` folder with 1,000 rows per year. The script will run on this demo data automatically if no other `/data` folder is found.
