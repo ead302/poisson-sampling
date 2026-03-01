@@ -15,13 +15,23 @@ t0 <- system.time({
     message(paste("...Starting 1st pass for Year:", yr))
 
     # Check if running on SOL (Linux) or Local (Windows)
-    if (Sys.info()["sysname"] == "Linux") {
-      # Path on ASU SOL Server
-      data_dir <- "/home/eagyema3/Poisson_sampling"
-    } else {
-    # Path on your local Windows machine
-    data_dir <- "C:/Users/User/Downloads"
-    }
+current_os <- Sys.info()["sysname"]
+if (current_os == "Linux") {
+    # ASU SOL Cluster
+    data_dir <- "/home/eagyema3/Poisson_sampling"
+    
+} else if (current_os == "Darwin") {
+    # This automatically finds /Users/yourname/Downloads
+    data_dir <- file.path(Sys.getenv("HOME"), "Downloads")
+    
+} else if (current_os == "Windows") {
+    # This automatically finds C:/Users/yourname/Downloads
+    data_dir <- file.path(Sys.getenv("USERPROFILE"), "Downloads")
+    
+} else {
+    # Fallback for rare systems (like Solaris or FreeBSD)
+    data_dir <- "./data" 
+}
 
     #file_path<- paste0("C:/Users/User/Downloads/natality", yr, "us.csv")
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
@@ -70,13 +80,26 @@ t0 <- system.time({
   for (yr in years) {
     message(paste("... Starting 2nd pass for Year:", yr))
 
-    if (Sys.info()["sysname"] == "Linux") {
-      # Path on ASU SOL Server
-      data_dir <- "/home/eagyema3/Poisson_sampling"
-    } else {
-    # Path on your local Windows machine
-    data_dir <- "C:/Users/User/Downloads"
-    }
+current_os <- Sys.info()["sysname"]
+
+if (current_os == "Linux") {
+    # ASU SOL Cluster
+    data_dir <- "/home/eagyema3/Poisson_sampling"
+    
+} else if (current_os == "Darwin") {
+    # Any Mac (Your M2)
+    # This automatically finds /Users/yourname/Downloads
+    data_dir <- file.path(Sys.getenv("HOME"), "Downloads")
+    
+} else if (current_os == "Windows") {
+    # Any Windows PC
+    # This automatically finds C:/Users/yourname/Downloads
+    data_dir <- file.path(Sys.getenv("USERPROFILE"), "Downloads")
+    
+} else {
+    # Fallback for rare systems (like Solaris or FreeBSD)
+    data_dir <- "./data" 
+}
     
     #file_path<- paste0("C:/Users/User/Downloads/natality", yr, "us.csv")
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
@@ -177,6 +200,7 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
 
 
