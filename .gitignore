@@ -20,6 +20,7 @@
 *.gz
 *.zip
 *.txt
+!toy_data/*.csv
 
 # --- Operating System Files ---
 .DS_Store
