@@ -29,13 +29,11 @@ git clone https://github.com/ead302/poisson-sampling.git
 cd poisson-sampling
 ```
 2. Quick Test: This repo includes a `toy_data/` folder with 1,000 rows per year. The script will run on this demo data automatically if no other `/data` folder is found.
-```
-source("sampling-birthweight.R")
-```
 3. Download the `natality2013us.csv` through `natality2024us.csv` files from the [NBER Vital Statistics Data](https://data.nber.org/nvss/natality/csv/) page.
 4. Place the downloaded data in a `/data` folder within your local project directory.
-5. The script will automatically skip these large files during `git push` thanks to the `.gitignore`.
-6. You can also run the main analysis script directly (without cloning) in R using the following command:
+5. Open and run the `sampling-birthweight.R` script.
+6. The script will automatically skip these large files during `git push` thanks to the `.gitignore`.
+7. You can also run the main analysis script directly (without cloning) in R using the following command:
 ```R
 source("https://raw.githubusercontent.com/ead302/poisson-sampling/main/sampling-birthweight.R")
 ```
