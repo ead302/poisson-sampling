@@ -52,7 +52,10 @@ t0 <- system.time({
   message(paste(" First pass complete.","\n"))
   
   
-  #### Second pass ####
+# ==========================================
+# DATA PROCESSING (Pass 2)
+# ==========================================
+  
   #Expected subsample size
   ns<-10000
   chunk_size2<-15000
@@ -62,16 +65,12 @@ t0 <- system.time({
   for (yr in years) {
     message(paste("... Starting 2nd pass for Year:", yr))
 
-    
-    #file_path<- paste0("C:/Users/User/Downloads/natality", yr, "us.csv")
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
     con <- file(file_path, open = "r")
-    
     
     #colnames_list <- names(fread(file_path, nrows = 0))
     header <- readLines(con, n = 1)
     
-    #skip <- 1
     chunk_ct<-0
     rows_processed<-1
     report<-25*chunk_size2
@@ -83,11 +82,7 @@ t0 <- system.time({
       # Convert to single string
       #chunk_text <- paste(chunk_lines, collapse = "\n")
       
-      # Read ALL columns first (no select yet!)
-      #chunk <- tryCatch(
-      #  fread(file_path, skip = skip, nrows = chunk_size2, header = FALSE),
-      #  error = function(e) NULL
-      #)
+      # Read ALL columns first
       chunk <- tryCatch(
         fread(text = c(header,chunk_lines),
               header = TRUE),
@@ -103,8 +98,6 @@ t0 <- system.time({
       if ("precare_rec" %in% nm) chunk$precare5 <- chunk$precare_rec  
       
       
-      
-      #chunk<-subset(chunk,select = c(dob_yy,dbwt,mager, sex, dmar, mrace6, meduc, precare5, cig_rec))
       chunk <- chunk[, .(dob_yy, dbwt, mager, sex, dmar, mrace6, meduc, precare5, cig_rec)]
       chunk$dbwt <- log(chunk$dbwt/1000)
       
@@ -145,7 +138,7 @@ subsample <- do.call(rbind, subsample)
 saveRDS(subsample, "natality_subsample_2013_2024.rds")
 
 # Optional: Also save as a small CSV if you want to open it in Excel/Python
-# fwrite(subsample, "natality_subsample_2013_2024.csv")
+ fwrite(subsample, "natality_subsample_2013_2024.csv")
 
 message("Subsample saved successfully. You can now download the .rds file to your local machine.")
 
@@ -162,6 +155,7 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
 
 
