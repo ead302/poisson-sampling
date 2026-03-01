@@ -1,45 +1,4 @@
-library(data.table)
-library(ggplot2)
-setDTthreads(8)
-options(scipen = 999)
-
-# ==========================================
-# PATH
-# ==========================================
-# Check for project-specific folders first 
-if (dir.exists("data") && length(list.files("data", pattern = "natality")) > 0) {
-    data_dir <- "data"
-    message("Using FULL dataset from local /data folder...")
-    
-} else if (dir.exists("toy_data")) {
-    data_dir <- "toy_data"
-    message("Using TOY dataset from /toy_data folder...")
-
-} else {
-    # Fallback to your original OS-specific paths
-    current_os <- Sys.info()["sysname"]
-    
-    if (current_os == "Linux") {
-        # ASU SOL Cluster
-        data_dir <- "/home/eagyema3/Poisson_sampling"
-        message("Running on SOL Cluster path...")
-        
-    } else if (current_os == "Darwin") {
-        # Your M2 Mac
-        data_dir <- file.path(Sys.getenv("HOME"), "Downloads")
-        message("Running on Mac: Using Downloads folder...")
-        
-    } else if (current_os == "Windows") {
-        # Standard Windows PC
-        data_dir <- file.path(Sys.getenv("USERPROFILE"), "Downloads")
-        message("Running on Windows: Using Downloads folder...")
-        
-    } else {
-        # Last resort fallback
-        data_dir <- "." 
-        message("OS not recognized. Using current working directory...")
-    }
-}
+source("setup.R")
 
 # ==========================================
 # DATA PROCESSING (Pass 1)
@@ -203,6 +162,7 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
 
 
