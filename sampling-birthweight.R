@@ -3,6 +3,48 @@ library(ggplot2)
 setDTthreads(8)
 options(scipen = 999)
 
+# ==========================================
+# PATH
+# ==========================================
+# Check for project-specific folders first 
+if (dir.exists("data") && length(list.files("data", pattern = "natality")) > 0) {
+    data_dir <- "data"
+    message("Using FULL dataset from local /data folder...")
+    
+} else if (dir.exists("toy_data")) {
+    data_dir <- "toy_data"
+    message("Using TOY dataset from /toy_data folder...")
+
+} else {
+    # Fallback to your original OS-specific paths
+    current_os <- Sys.info()["sysname"]
+    
+    if (current_os == "Linux") {
+        # ASU SOL Cluster
+        data_dir <- "/home/eagyema3/Poisson_sampling"
+        message("Running on SOL Cluster path...")
+        
+    } else if (current_os == "Darwin") {
+        # Your M2 Mac
+        data_dir <- file.path(Sys.getenv("HOME"), "Downloads")
+        message("Running on Mac: Using Downloads folder...")
+        
+    } else if (current_os == "Windows") {
+        # Standard Windows PC
+        data_dir <- file.path(Sys.getenv("USERPROFILE"), "Downloads")
+        message("Running on Windows: Using Downloads folder...")
+        
+    } else {
+        # Last resort fallback
+        data_dir <- "." 
+        message("OS not recognized. Using current working directory...")
+    }
+}
+
+# ==========================================
+# DATA PROCESSING (Pass 1)
+# ==========================================
+
 years <- 2013:2024
 chunk_size1<-50000
 sum_w <-0
@@ -13,25 +55,6 @@ sd_w  <- 1
 t0 <- system.time({
   for (yr in years) {
     message(paste("...Starting 1st pass for Year:", yr))
-
-    # Check if running on SOL (Linux) or Local (Windows)
-current_os <- Sys.info()["sysname"]
-if (current_os == "Linux") {
-    # ASU SOL Cluster
-    data_dir <- "/home/eagyema3/Poisson_sampling"
-    
-} else if (current_os == "Darwin") {
-    # This automatically finds /Users/yourname/Downloads
-    data_dir <- file.path(Sys.getenv("HOME"), "Downloads")
-    
-} else if (current_os == "Windows") {
-    # This automatically finds C:/Users/yourname/Downloads
-    data_dir <- file.path(Sys.getenv("USERPROFILE"), "Downloads")
-    
-} else {
-    # Fallback for rare systems (like Solaris or FreeBSD)
-    data_dir <- "./data" 
-}
 
     #file_path<- paste0("C:/Users/User/Downloads/natality", yr, "us.csv")
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
@@ -80,26 +103,6 @@ if (current_os == "Linux") {
   for (yr in years) {
     message(paste("... Starting 2nd pass for Year:", yr))
 
-current_os <- Sys.info()["sysname"]
-
-if (current_os == "Linux") {
-    # ASU SOL Cluster
-    data_dir <- "/home/eagyema3/Poisson_sampling"
-    
-} else if (current_os == "Darwin") {
-    # Any Mac (Your M2)
-    # This automatically finds /Users/yourname/Downloads
-    data_dir <- file.path(Sys.getenv("HOME"), "Downloads")
-    
-} else if (current_os == "Windows") {
-    # Any Windows PC
-    # This automatically finds C:/Users/yourname/Downloads
-    data_dir <- file.path(Sys.getenv("USERPROFILE"), "Downloads")
-    
-} else {
-    # Fallback for rare systems (like Solaris or FreeBSD)
-    data_dir <- "./data" 
-}
     
     #file_path<- paste0("C:/Users/User/Downloads/natality", yr, "us.csv")
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
@@ -200,6 +203,7 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
 
 
