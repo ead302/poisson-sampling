@@ -19,6 +19,10 @@ t0 <- system.time({
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
     con <- file(file_path, open = "r")
     header <- readLines(con, n = 1)
+    nm <- trimws(gsub('"', '', strsplit(header, ",")[[1]]))
+    
+    #(Historical Mapping)
+    wt_col <- if ("dbirwt" %in% nm) "dbirwt" else if ("dbwt" %in% nm) "dbwt" else "BIRTHWGT"
     
     chunk_count <- 0
     repeat {
@@ -28,9 +32,9 @@ t0 <- system.time({
       
       chunk <- fread(text = c(header,chunk_lines), 
                      header = TRUE,
-                     select = c("dbwt"),
+                     select = wt_col,
                      na.strings = c("", "NA", "NULL"))
-      
+      if (wt_col != "dbwt") setnames(chunk, wt_col, "dbwt")
       
       if (is.null(chunk) || nrow(chunk) == 0) break
       
@@ -78,8 +82,7 @@ t0 <- system.time({
     repeat {
       chunk_lines <- readLines(con, n = chunk_size2)
       if (length(chunk_lines) == 0) break
-      
-      # Convert to single string
+    
       #chunk_text <- paste(chunk_lines, collapse = "\n")
       
       # Read ALL columns first
@@ -93,15 +96,22 @@ t0 <- system.time({
       #setnames(chunk, colnames_list)
       
       nm<-names(chunk)
-      if ("mar" %in% nm)   chunk$dmar <- chunk$mar  
-      if ("mrace" %in% nm) chunk$mrace6 <- chunk$mrace  
-      if ("precare_rec" %in% nm) chunk$precare5 <- chunk$precare_rec  
-      
-      
+      if ("datayear" %in% nm)    setnames(chunk, "datayear", "dob_yy", skip_absent=T)
+      if ("mar" %in% nm)         setnames(chunk, "mar", "dmar", skip_absent=T)
+      if ("mrace" %in% nm)       setnames(chunk, "mrace", "mrace6", skip_absent=T)
+      if ("precare_rec" %in% nm) setnames(chunk, "precare_rec", "precare5", skip_absent=T)
+      if ("monpre" %in% nm)      setnames(chunk, "monpre", "precare5", skip_absent=T)
+      if ("dbirwt" %in% nm)      setnames(chunk, "dbirwt", "dbwt", skip_absent=T)
+      if ("dmage" %in% nm)       setnames(chunk, "dmage", "mager", skip_absent=T)
+      if ("umagerpt" %in% nm)    setnames(chunk, "umagerpt", "mager", skip_absent=T)
+      if ("dmeduc" %in% nm)      setnames(chunk, "dmeduc", "meduc", skip_absent=T)
+      if ("umeduc" %in% nm)      setnames(chunk, "umeduc", "meduc", skip_absent=T)
+      if ("cigar" %in% nm)       setnames(chunk, "cigar", "cig_rec", skip_absent=T)
+      if ("csex" %in% nm)        setnames(chunk, "csex", "sex", skip_absent=T)
+
       chunk <- chunk[, .(dob_yy, dbwt, mager, sex, dmar, mrace6, meduc, precare5, cig_rec)]
       chunk$dbwt <- log(chunk$dbwt/1000)
-      
-      
+          
       chunk$w <- dnorm(chunk$dbwt, mu_w, sd_w)
       sum_wt <- sum_wt + sum(chunk$w*chunk$dbwt)
       
@@ -155,6 +165,7 @@ ggplot(subsample, aes(x = exp(dbwt))) +
   facet_wrap(~ dob_yy, ncol = 3)+
   xlim(0.5, 5) 
 )
+
 
 
 
