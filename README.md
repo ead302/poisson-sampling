@@ -1,11 +1,10 @@
-# Poisson Sampling: US Birthweight Analysis (NBER Natality)
+# Targeted Subsampling of US Natality Data via Poisson Sampling
 
 ## Project Overview
-This project implements **Targeted subsampling and Poisson sampling** on the **2013-2024** US Natality dataset. 
-
-The goal is to analyze birthweight distributions using a two-pass streaming approach to calculate global weights ($sum\_w$) and use the weighted samples in downstream tasks.
+This repository implements a memory-efficient, two-pass pipeline to generate intentionally biased subsamples from large-scale  US Natality records (2000–2024). By utilizing Poisson sampling, the tool produces high-utility subsets of $\approx 10,000$ observations, in pre-specified regions of interest without requiring the computational overhead of the full dataset, for downstream statistical modeling (e.g Density estimation).
 
 ## Key Features
+* **Memory-Efficient Streaming:** Process millions of rows in small chunks, bypassing RAM limitations.
 * **Two-Pass Implementation:** Efficiently calculates sampling weights before the primary sampling pass.
 * **Scalable Workflow:** Optimized for both local Mac/Windows use and high-performance computing clusters (ASU SOL).
 * **Bias Correction:** Enables debiasing for downstream statistical inference.
