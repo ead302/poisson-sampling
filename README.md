@@ -1,7 +1,7 @@
 # Targeted Subsampling of US Natality Data via Poisson Sampling
 
 ## Project Overview
-This repository implements a memory-efficient, two-pass pipeline to generate intentionally biased subsamples from large-scale  US Natality records (2000–2024). By utilizing Poisson sampling, the tool produces high-utility subsets of $\approx 10,000$ observations, in pre-specified regions of interest without requiring the computational overhead of the full dataset, for downstream statistical modeling (e.g Density estimation).
+This repository implements a memory-efficient, two-pass pipeline to generate intentionally biased subsamples from large-scale  US Natality records (2013–2024). By utilizing Poisson sampling, the tool produces high-utility subsets of $\approx 10,000$ observations, in pre-specified regions of interest without requiring the computational overhead of the full dataset, for downstream statistical modeling (e.g Density estimation).
 
 ## Key Features
 * **Memory-Efficient Streaming:** Process millions of rows in small chunks, bypassing RAM limitations.
