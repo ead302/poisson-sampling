@@ -6,7 +6,7 @@ This repository implements a memory-efficient, two-pass pipeline to generate int
 ## Key Features
 * **Memory-Efficient Streaming:** Process millions of rows in small chunks, bypassing RAM limitations.
 * **Two-Pass Implementation:** Efficiently calculates sampling weights before the primary sampling pass.
-* **Scalable Workflow:** Optimized for both local Mac/Windows use and high-performance computing clusters (ASU SOL).
+* **Scalable Workflow:** Optimized for both Mac and Windows.
 * **Bias Correction:** Enables debiasing for downstream statistical inference.
 
 ## Prerequisites
