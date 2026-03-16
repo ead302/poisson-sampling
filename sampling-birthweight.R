@@ -15,7 +15,6 @@ t0 <- system.time({
   for (yr in years) {
     message(paste("...Starting 1st pass for Year:", yr))
 
-    #file_path<- paste0("C:/Users/User/Downloads/natality", yr, "us.csv")
     file_path <- file.path(data_dir, paste0("natality", yr, "us.csv"))
     con <- file(file_path, open = "r")
     header <- readLines(con, n = 1)
@@ -26,7 +25,6 @@ t0 <- system.time({
     
     chunk_count <- 0
     repeat {
-      
       chunk_lines <- readLines(con, n = chunk_size1)
       if (length(chunk_lines) == 0) break
       
@@ -38,15 +36,12 @@ t0 <- system.time({
       
       if (is.null(chunk) || nrow(chunk) == 0) break
       
-
-      sum_w <- sum_w + sum(dnorm(log(chunk$dbwt/1000), mu_w, sd_w), 
-                           na.rm = TRUE)
+      sum_w <- sum_w + sum(dnorm(log(chunk$dbwt/1000), mu_w, sd_w),na.rm = TRUE)
       
       chunk_count <- chunk_count + 1
       if (chunk_count %% 10 == 0) {
         message(paste("... Processed", chunk_count * chunk_size1, "rows..."))
       }
-      
     }
     
     close(con)
@@ -57,7 +52,7 @@ t0 <- system.time({
   
   
 # ==========================================
-# DATA PROCESSING (Pass 2)
+# SAMPLING PASS (Pass 2)
 # ==========================================
   
   #Expected subsample size
@@ -89,12 +84,10 @@ t0 <- system.time({
       chunk <- tryCatch(
         fread(text = c(header,chunk_lines),
               header = TRUE),
-        error = function(e) NULL
-      )
+        error = function(e) NULL)
       
       if (is.null(chunk) || nrow(chunk) == 0) break
-      #setnames(chunk, colnames_list)
-      
+
       nm<-names(chunk)
       if ("datayear" %in% nm)    setnames(chunk, "datayear", "dob_yy", skip_absent=T)
       if ("mar" %in% nm)         setnames(chunk, "mar", "dmar", skip_absent=T)
@@ -118,7 +111,6 @@ t0 <- system.time({
       prob <- pmin(1,(chunk$w / sum_w) * ns)
       keep <- runif(nrow(chunk)) <= prob
       
-      
       if (any(keep)) {
         subsample[[i]] <- chunk[keep, ]
         i <- i + 1
@@ -135,7 +127,6 @@ t0 <- system.time({
     message(paste(" Year", yr, "complete.\n"))
     close(con)
     rm(chunk)
-    
   }
   
 })
@@ -144,7 +135,6 @@ t0 <- system.time({
 subsample <- do.call(rbind, subsample)
 
 # --- Save the Final Subsample ---
-# Saving as .rds preserves R-specific data types (like factors) and is compressed
 saveRDS(subsample, "natality_subsample_2013_2024.rds")
 
 # Optional: Also save as a small CSV if you want to open it in Excel/Python
@@ -153,8 +143,6 @@ saveRDS(subsample, "natality_subsample_2013_2024.rds")
 message("Subsample saved successfully. You can now download the .rds file to your local machine.")
 
 print(t0["elapsed"])
-
-#print(table(subsample$dob_yy))
 
 print(
 ggplot(subsample, aes(x = exp(dbwt))) +
