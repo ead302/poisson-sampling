@@ -8,8 +8,8 @@ years <- 2013:2024
 chunk_size1<-50000
 sum_w <-0
 sum_wt<- 0
-mu_w  <- 0.6
-sd_w  <- 1
+mu_w  <- log(0.6)
+sd_w  <- 0.5
 
 t0 <- system.time({
   for (yr in years) {
@@ -104,9 +104,7 @@ t0 <- system.time({
 
       chunk <- chunk[, .(dob_yy, dbwt, mager, sex, dmar, mrace6, meduc, precare5, cig_rec)]
       chunk$dbwt <- log(chunk$dbwt/1000)
-          
       chunk$w <- dnorm(chunk$dbwt, mu_w, sd_w)
-      sum_wt <- sum_wt + sum(chunk$w*chunk$dbwt)
       
       prob <- pmin(1,(chunk$w / sum_w) * ns)
       keep <- runif(nrow(chunk)) <= prob
@@ -151,7 +149,7 @@ ggplot(subsample, aes(x = exp(dbwt))) +
                  fill = "steelblue",
                  color = "white") +
   facet_wrap(~ dob_yy, ncol = 3)+
-  xlim(0.5, 5) 
+  xlim(0, 5.5) 
 )
 
 
